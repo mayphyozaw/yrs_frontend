@@ -1,5 +1,5 @@
 <template>
-  <main> About Page </main>
+  <main> Station Page </main>
 </template>
 
 <script setup> </script>
