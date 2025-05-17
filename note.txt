@@ -23,3 +23,14 @@ Using V3.js for Frontend
             3. actions:{
                 async get()
               }
+
+
+The difference between => export default userPortalAxiosInstance ; and export { name };
+
+
+export default userPortalAxiosInstance => When we write the import => import userPortalAxiosInstance from "@/userPortalAxiosInstance";
+
+
+in which  "userPortalAxiosInstance" the name which can be changed as you like in import so, the name is not fixed.
+
+export { name }; => when you do not want to change the name , you can onlu use this name.
