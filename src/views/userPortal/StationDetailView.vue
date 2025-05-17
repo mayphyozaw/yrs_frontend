@@ -8,26 +8,63 @@
   />
 
   <van-pull-refresh
-      v-model="refreshing"
-      pulling-text="Pull to refresh"
-      loosing-text="Pull to refresh"
-      loading-text="Loading"
-      success-text="Successfully loaded"
-      @refresh="onRefresh"
+    v-model="refreshing"
+    pulling-text="Pull to refresh"
+    loosing-text="Pull to refresh"
+    loading-text="Loading"
+    success-text="Successfully loaded"
+    @refresh="onRefresh"
   >
-      <div v-if="stationDetail != null">
-        <div class="bg-theme pt-14 pb-20">
-          <h6 class="text-center text-white">{{ stationDetail.title }}</h6>
-          <p class="text-center text-white text-xs mb-2">
-            {{ stationDetail.description }}
-          </p>
-        </div>
+    <div v-if="stationDetail != null">
+      <div class="bg-theme pt-14 pb-20">
+        <h6 class="text-center text-white">{{ stationDetail.title }}</h6>
+        <p class="text-center text-white text-xs mb-2">
+          {{ stationDetail.description }}
+        </p>
       </div>
+
+      <!-- map -->
+      <div class="p-3 relative" style="top: -74px">
+        <div id="map" class="h-40 mb-3"></div>
+
+        <!-- tab -->
+        <van-tabs>
+          <van-tab>
+            <template #title>Clockwise</template>
+            <div class="py-2">
+              <van-cell-group inset class="mb-3 mx-0">
+                <van-cell
+                  v-for="route_schedule in stationDetail.clockwise_route_schedules"
+                  :key="route_schedule.slug"
+                  :title="route_schedule.title"
+                  :label="route_schedule.time"
+                >
+                </van-cell>
+              </van-cell-group>
+            </div>
+          </van-tab>
+          <van-tab>
+            <template #title>Anticlockwise</template>
+            <div class="py-2">
+              <van-cell-group inset class="mb-3 mx-0">
+                <van-cell
+                  v-for="route_schedule in stationDetail.anticlockwise_route_schedules"
+                  :key="route_schedule.slug"
+                  :title="route_schedule.title"
+                  :label="route_schedule.time"
+                >
+                </van-cell>
+              </van-cell-group>
+            </div>
+          </van-tab>
+        </van-tabs>
+      </div>
+    </div>
   </van-pull-refresh>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStationDetailStore } from "@/stores/userPortal/stationDetailStore";
 
@@ -45,6 +82,37 @@ const fetchStationDetail = async () => {
   stationDetail.value = stationDetailStore.getResponse?.data;
   errorMessage.value = stationDetailStore.getErrorMessage;
   refreshing.value = false;
+
+  if (stationDetail != null) {
+    nextTick(() => {
+      initMap();
+    });
+  }
+};
+
+const initMap = () => {
+  var map = L.map("map").setView(
+    [stationDetail.value.latitude, stationDetail.value.longitude],
+    15
+  );
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  // L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=IwRNyovMKfErhzgK8z93').addTo(map);
+
+  var stationMarker = L.icon({
+    iconUrl: "/src/assets/image/station-marker.png",
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
+  L.marker([stationDetail.value.latitude, stationDetail.value.longitude], {
+    icon: stationMarker,
+  }).addTo(map);
 };
 
 const onRefresh = () => {
