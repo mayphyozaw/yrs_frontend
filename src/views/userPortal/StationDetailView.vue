@@ -15,7 +15,8 @@
     success-text="Successfully loaded"
     @refresh="onRefresh"
   >
-    <div v-if="stationDetail != null">
+
+  <div v-if="stationDetail != null">
       <div class="bg-theme pt-14 pb-20">
         <h6 class="text-center text-white">{{ stationDetail.title }}</h6>
         <p class="text-center text-white text-xs mb-2">
@@ -60,8 +61,18 @@
         </van-tabs>
       </div>
     </div>
+
+    <div v-if="errorMessage != null" class="pt-14 px-3 pb-20">
+      <div class="bg-white rounded-lg shadow-md flex justify-center items-center">
+          <div>
+            <van-empty image="error" :description="errorMessage" />
+
+          </div>
+      </div>
+    </div>
   </van-pull-refresh>
 </template>
+
 
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
