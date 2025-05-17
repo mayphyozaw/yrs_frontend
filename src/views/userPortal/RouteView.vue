@@ -1,8 +1,12 @@
 <template>
-  <van-nav-bar title="Route" :fixed="true"/>
-    <main> Route Page </main>
-  </template>
-  
-  <script setup> </script>
-  
-  <style scope></style>
+  <van-nav-bar title="Route" :fixed="true" />
+  <div class="pt-[46px]"></div>
+
+  <List :store-name="`routeStore`" />
+</template>
+
+<script setup>
+import List from "@/components/List.vue";
+</script>
+
+<style scope></style>
