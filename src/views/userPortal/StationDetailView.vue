@@ -1,78 +1,78 @@
 <template>
-  <van-nav-bar
-    title="Station Detail"
-    :fixed="true"
-    left-text=""
-    left-arrow
-    @click-left="onClickLeft"
-  />
+    <van-nav-bar
+      title="Station Detail"
+      :fixed="true"
+      left-text=""
+      left-arrow
+      @click-left="onClickLeft"
+    />
 
-  <van-pull-refresh
-    v-model="refreshing"
-    pulling-text="Pull to refresh"
-    loosing-text="Pull to refresh"
-    loading-text="Loading"
-    success-text="Successfully loaded"
-    @refresh="onRefresh"
-  >
+    <van-pull-refresh
+      v-model="refreshing"
+      pulling-text="Pull to refresh"
+      loosing-text="Pull to refresh"
+      loading-text="Loading"
+      success-text="Successfully loaded"
+      @refresh="onRefresh"
+    >
+      <div v-if="stationDetail != null">
+        <div class="bg-theme pt-14 pb-20">
+          <h6 class="text-center text-white">{{ stationDetail.title }}</h6>
+          <p class="text-center text-white text-xs mb-2">
+            {{ stationDetail.description }}
+          </p>
+        </div>
 
-  <div v-if="stationDetail != null">
-      <div class="bg-theme pt-14 pb-20">
-        <h6 class="text-center text-white">{{ stationDetail.title }}</h6>
-        <p class="text-center text-white text-xs mb-2">
-          {{ stationDetail.description }}
-        </p>
+        <!-- map -->
+        <div class="p-3 relative" style="top: -74px">
+          <div id="map" class="h-40 mb-3"></div>
+
+          <!-- tab -->
+          <van-tabs>
+            <van-tab>
+              <template #title>Clockwise</template>
+              <div class="py-2">
+                <van-cell-group inset class="mb-3 mx-0">
+                  <van-cell
+                    v-for="route_schedule in stationDetail.clockwise_route_schedules"
+                    :key="route_schedule.slug"
+                    :title="route_schedule.title"
+                    :label="route_schedule.time"
+                    :to="`/route/${route_schedule.slug}`"
+                  >
+                  </van-cell>
+                </van-cell-group>
+              </div>
+            </van-tab>
+            <van-tab>
+              <template #title>Anticlockwise</template>
+              <div class="py-2">
+                <van-cell-group inset class="mb-3 mx-0">
+                  <van-cell
+                    v-for="route_schedule in stationDetail.anticlockwise_route_schedules"
+                    :key="route_schedule.slug"
+                    :title="route_schedule.title"
+                    :label="route_schedule.time"
+                  >
+                  </van-cell>
+                </van-cell-group>
+              </div>
+            </van-tab>
+          </van-tabs>
+        </div>
       </div>
 
-      <!-- map -->
-      <div class="p-3 relative" style="top: -74px">
-        <div id="map" class="h-40 mb-3"></div>
-
-        <!-- tab -->
-        <van-tabs>
-          <van-tab>
-            <template #title>Clockwise</template>
-            <div class="py-2">
-              <van-cell-group inset class="mb-3 mx-0">
-                <van-cell
-                  v-for="route_schedule in stationDetail.clockwise_route_schedules"
-                  :key="route_schedule.slug"
-                  :title="route_schedule.title"
-                  :label="route_schedule.time"
-                >
-                </van-cell>
-              </van-cell-group>
-            </div>
-          </van-tab>
-          <van-tab>
-            <template #title>Anticlockwise</template>
-            <div class="py-2">
-              <van-cell-group inset class="mb-3 mx-0">
-                <van-cell
-                  v-for="route_schedule in stationDetail.anticlockwise_route_schedules"
-                  :key="route_schedule.slug"
-                  :title="route_schedule.title"
-                  :label="route_schedule.time"
-                >
-                </van-cell>
-              </van-cell-group>
-            </div>
-          </van-tab>
-        </van-tabs>
-      </div>
-    </div>
-
-    <div v-if="errorMessage != null" class="pt-14 px-3 pb-20">
-      <div class="bg-white rounded-lg shadow-md flex justify-center items-center">
+      <div v-if="errorMessage != null" class="pt-14 px-3 pb-20">
+        <div
+          class="bg-white rounded-lg shadow-md flex justify-center items-center"
+        >
           <div>
             <van-empty image="error" :description="errorMessage" />
-
           </div>
+        </div>
       </div>
-    </div>
-  </van-pull-refresh>
+    </van-pull-refresh>
 </template>
-
 
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
@@ -85,6 +85,7 @@ const stationDetailStore = useStationDetailStore();
 const stationDetail = ref(null);
 const errorMessage = ref(null);
 const refreshing = ref(false);
+var map = null;
 
 const onClickLeft = () => history.back();
 
@@ -102,7 +103,10 @@ const fetchStationDetail = async () => {
 };
 
 const initMap = () => {
-  var map = L.map("map").setView(
+    if(map !== null){
+      map.remove();
+    }
+   map = L.map("map").setView(
     [stationDetail.value.latitude, stationDetail.value.longitude],
     15
   );

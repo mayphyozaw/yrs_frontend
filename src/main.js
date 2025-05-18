@@ -3,7 +3,7 @@ import './assets/css/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { Tabbar, TabbarItem, NavBar, List, PullRefresh, Cell, CellGroup, Search, Button, TextEllipsis,Tab, Tabs, Empty } from 'vant';
+import { Tabbar, TabbarItem, NavBar, List, PullRefresh, Cell, CellGroup, Search, Button, TextEllipsis,Tab, Tabs, Empty,Grid, GridItem, Icon,Step, Steps, Dialog } from 'vant';
 
 import App from './App.vue'
 import router from './router'
@@ -24,7 +24,12 @@ app.use(TextEllipsis);
 app.use(Tab);
 app.use(Tabs);
 app.use(Empty);
-
+app.use(Grid);
+app.use(GridItem);
+app.use(Icon);
+app.use(Step);
+app.use(Steps);
+app.use(Dialog);
 app.use(router)
 
 app.mount('#app')
