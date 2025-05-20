@@ -32,6 +32,7 @@
       <div class="p-3 relative" style="top: -74px">
         <van-grid :border="false" :column-num="3" class="mb-5">
           <van-grid-item class="origin-grid-item">
+            
             <p class="text-xs text-center text-theme mb-1">Origin</p>
             <p class="text-xs text-center text-gray-500 mb-1">
               {{ routeDetail.origin_station_title }}
@@ -58,6 +59,7 @@
 
         <van-grid :border="false" :column-num="2" class="mb-5">
           <van-grid-item class="total-stations-grid-item">
+            <van-icon name="shop-o" size="16" class="mb-1"/>
             <p class="text-xs text-center text-theme mb-1">Total Stations</p>
             <p class="text-xs text-center text-gray-500 mb-1">
               {{ routeDetail.total_stations }}
@@ -65,6 +67,8 @@
           </van-grid-item>
 
           <van-grid-item class="traveling-times-grid-item">
+            <van-icon name="underway-o" size="16" class="mb-1"/>
+
             <p class="text-xs text-center text-theme mb-1">Traveling Time</p>
             <p class="text-xs text-center text-gray-500 mb-1">
               {{ routeDetail.traveling_minutes }}
@@ -184,7 +188,7 @@ var map = null;
 const onClickLeft = () => history.back();
 
 const fetchRouteDetail = async () => {
-  await routeDetailStore.get(route.params.slug);
+  await routeDetailStore.get(route.params.slug, route.query.origin_station_slug, route.query.destination_station_slug);
   routeDetail.value = routeDetailStore.getResponse?.data;
   errorMessage.value = routeDetailStore.getErrorMessage;
   refreshing.value = false;
@@ -253,6 +257,10 @@ onMounted(() => {
 
 .destination-grid-item .van-grid-item__content {
   border-radius: 0 8px 8px 0 !important;
+}
+
+.van-step--vertical{
+  padding: 10px 10px 10px 10px !important;
 }
 
 .van-step--vertical .van-step__circle-container {
