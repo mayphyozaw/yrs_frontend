@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import userPortalAxiosInstance from "@/userPortalAxiosInstance";
+import axiosInstance from "@/axiosInstance";
 
 
 export const useStationDetailStore = defineStore("stationDetailStore", {
@@ -19,7 +19,7 @@ export const useStationDetailStore = defineStore("stationDetailStore", {
     async get(slug){
         try {
             
-            let response = await userPortalAxiosInstance.get(`station/${slug}`);
+            let response = await axiosInstance.get(`station/${slug}`);
 
             this.response = response.data ?? null;
             this.error = null;

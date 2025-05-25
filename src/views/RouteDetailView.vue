@@ -170,7 +170,7 @@
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useRouteDetailStore } from "@/stores/userPortal/routeDetailStore";
+import { useRouteDetailStore } from "@/stores/routeDetailStore"
 
 const route = useRoute();
 const router = useRouter();

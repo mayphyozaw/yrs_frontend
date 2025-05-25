@@ -80,7 +80,7 @@
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useStationDetailStore } from "@/stores/userPortal/stationDetailStore";
+import { useStationDetailStore } from "@/stores/stationDetailStore"
 
 const route = useRoute();
 const router = useRouter();
