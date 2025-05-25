@@ -42,7 +42,7 @@
       </van-popup>
     </div>
 
-    <div class="destination-component">
+    <div class="destination-component mb-3">
       <van-field
         v-model="destinationStationTitle"
         is-link
@@ -64,17 +64,59 @@
         />
       </van-popup>
     </div>
+
+    <div class="h-screen">
+      <div id="map" class="h-4/6 rounded-lg shadow-md"></div>
+    </div>
   </div>
+
+  <van-dialog
+    v-model:show="showDialog"
+    :close-on-click-overlay="true"
+    :show-confirm-button="true"
+    :show-cancel-button="true"
+    confirm-button-text="Select Destination"
+    cancel-button-text="Select Origin"
+    confirm-button-color="#1CBC9B"
+    cancel-button-color="#1CBC9B"
+    @confirm="dialogSelectDestination"
+    @cancel="dialogSelectOrigin"
+    
+  >
+    <div class="p-3">
+      <img src="@/assets/image/station.png" class="w-14 h-14 mx-auto mb-4" />
+      <p class="text-md text-gray-700 text-center mb-3">
+        {{ dialogStation.title }}
+      </p>
+
+      <div class="text-center">
+        <van-button
+          icon="info-o"
+          type="primary"
+          size="small"
+          plain
+          color="#1CBC9B"
+          :to="`/station/${dialogStation.slug}`"
+        >
+          Station Information</van-button
+        >
+      </div>
+    </div>
+  </van-dialog>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { useStationStore } from "@/stores/userPortal/stationStore";
+import { onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useStationStore } from "@/stores/userPortal/stationStore";
+import { useMarkerStore } from "@/stores/userPortal/markerStore";
 
-const stationStore = useStationStore();
 const router = useRouter();
+const stationStore = useStationStore();
+const markerStore = useMarkerStore();
 const stations = ref([]);
+
+const markers = ref([]);
 
 const page = ref(1);
 const last_page = ref(null);
@@ -84,10 +126,14 @@ const originStationSlug = ref(null);
 const originStationTitle = ref("");
 const showOriginPicker = ref(false);
 
-
 const destinationStationSlug = ref(null);
 const destinationStationTitle = ref("");
 const showDestinationPicker = ref(false);
+
+const showDialog = ref(false);
+const dialogStation = ref(null);
+
+var map = null;
 
 const fetchStation = async () => {
   if (finished.value == false) {
@@ -103,6 +149,39 @@ const fetchStation = async () => {
   }
 };
 
+const fetchMarker = async () => {
+  if (map.getZoom() >= 13) {
+    let bounds = map.getBounds();
+
+    await markerStore.get(
+      bounds._northEast.lat,
+      bounds._northEast.lng,
+      bounds._southWest.lat,
+      bounds._southWest.lng
+    );
+
+    markers.value = markerStore.getResponse?.data ?? [];
+
+    var stationMarker = L.icon({
+      iconUrl: "/src/assets/image/station-marker.png",
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
+    });
+
+    markers.value.forEach(function (marker) {
+      L.marker([marker["latitude"], marker["longitude"]], {
+        icon: stationMarker,
+      })
+        .addTo(map)
+        .on("click", () => {
+          showDialog.value = true;
+          dialogStation.value = marker;
+        });
+    });
+  }
+};
+
 const originFieldClick = () => {
   showOriginPicker.value = true;
   fetchStation();
@@ -112,7 +191,6 @@ const destinationFieldClick = () => {
   showDestinationPicker.value = true;
   fetchStation();
 };
-
 
 const originPickerConfirm = ({ selectedOptions }) => {
   originStationSlug.value = selectedOptions[0]?.slug;
@@ -126,29 +204,84 @@ const destinationPickerConfirm = ({ selectedOptions }) => {
   showDestinationPicker.value = false;
 };
 
-const originPickerChange = ({selectedOptions}) => {
-  if (stations.value[stations.value.length - 1]?.slug == selectedOptions[0].slug){
+const originPickerChange = ({ selectedOptions }) => {
+  if (
+    stations.value[stations.value.length - 1]?.slug == selectedOptions[0].slug
+  ) {
     fetchStation();
   }
 };
 
-const destinationPickerChange = ({selectedOptions}) => {
-  if (stations.value[stations.value.length - 1]?.slug == selectedOptions[0].slug){
+const destinationPickerChange = ({ selectedOptions }) => {
+  if (
+    stations.value[stations.value.length - 1]?.slug == selectedOptions[0].slug
+  ) {
     fetchStation();
   }
 };
 
-watch(originStationSlug, () =>{
-  if(originStationSlug.value != null && destinationStationSlug.value !=null){
-    router.push(`route?origin_station_slug=${originStationSlug.value}&destination_station_slug=${destinationStationSlug.value}`);
+
+const dialogSelectOrigin = () => {
+  originStationSlug.value = dialogStation.value.slug;
+  originStationTitle.value = dialogStation.value.title;
+};
+
+
+const dialogSelectDestination = () => {
+  destinationStationSlug.value = dialogStation.value.slug;
+  destinationStationTitle.value = dialogStation.value.title;
+};
+
+
+const initMap = () => {
+  if (map !== null) {
+    map.remove();
+  }
+  map = L.map("map").setView([16.8452, 96.1218], 13);
+
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  // navigator.geolocation.getCurrentPosition((position) => {
+  //   map.setView([position.coords.latitude, position.coords.longitude], 13);
+
+  fetchMarker();
+
+  map.on("moveend", () => {
+    fetchMarker();
+  });
+  // });
+};
+
+watch(originStationSlug, () => {
+  if (originStationSlug.value != null && destinationStationSlug.value != null) {
+    router.push(
+      `route?origin_station_slug=${originStationSlug.value}&destination_station_slug=${destinationStationSlug.value}`
+    );
   }
 });
 
-watch(destinationStationSlug, () =>{
-  if(originStationSlug.value != null && destinationStationSlug.value !=null){
-    router.push(`route?origin_station_slug=${originStationSlug.value}&destination_station_slug=${destinationStationSlug.value}`);
+watch(destinationStationSlug, () => {
+  if (originStationSlug.value != null && destinationStationSlug.value != null) {
+    router.push(
+      `route?origin_station_slug=${originStationSlug.value}&destination_station_slug=${destinationStationSlug.value}`
+    );
   }
+});
+
+onMounted(() => {
+  initMap();
 });
 </script>
 
-<style scope></style>
+<style scope>
+  .origin-component .van-cell{
+    border-radius: 10px 10px 0 0;
+  }
+
+  .destination-component .van-cell{
+    border-radius: 0 0 10px 10px ;
+  }
+</style>
