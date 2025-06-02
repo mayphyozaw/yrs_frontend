@@ -1,6 +1,6 @@
 <template>
   <van-nav-bar
-    title="Register"
+    title="Login"
     :fixed="true"
     left-text=""
     left-arrow
@@ -13,16 +13,10 @@
     <van-form @submit="onSubmit">
       <div class="bg-white rounded-lg">
         <div class="flex justify-center items-center py-3">
-          <img src="@/assets/image/register.png" alt="" class="w-5/12" />
+          <img src="@/assets/image/login.png" alt="" class="w-5/12" />
         </div>
         <van-cell-group inset class="mb-3 mx-0">
-          <van-field
-            v-model="name"
-            name="name"
-            label="Name"
-            placeholder="Enter your name"
-            :error-message="errors.name"
-          />
+          
           <van-field
             v-model="email"
             name="email"
@@ -57,25 +51,24 @@
 
     <van-divider class="border-theme">Or</van-divider>
     <p class="text-center tet-sm">
-      Already registered?
-      <RouterLink to="/login" class="text-theme">Login</RouterLink>
+      Not registered?
+      <RouterLink to="/register" class="text-theme">Register</RouterLink>
     </p>
   </div>
+  
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useRegisterStore } from "@/stores/registerStore";
-import { showSuccessToast } from "vant";
+import {useRouter} from "vue-router";
+import { useLoginStore } from "@/stores/loginStore";
+import { showSuccessToast } from 'vant';
 
 const router = useRouter();
-const registerStore = useRegisterStore();
-const name = ref("");
+const loginStore = useLoginStore();
 const email = ref("");
 const password = ref("");
 const errors = ref({
-  name: "",
   email: "",
   password: "",
 });
@@ -83,45 +76,44 @@ const submitBtnloading = ref(false);
 
 const onClickLeft = () => history.back();
 
+
+
 const onSubmit = async (values) => {
   submitBtnloading.value = true;
 
   errors.value = {
-    name: "",
     email: "",
     password: "",
   };
 
-  await registerStore.store(values.name, values.email, values.password);
-
-  if (registerStore.getErrorMessage) {
-    if (registerStore.getErrors) {
+  await loginStore.store(values.email, values.password);
+  
+  if (loginStore.getErrorMessage) {
+    if (loginStore.getErrors) {
       errors.value = {
-        name: registerStore.getErrors.name
-          ? registerStore.getErrors.name.join(",")
+        
+        email: loginStore.getErrors.email
+          ? loginStore.getErrors.email.join(", ")
           : "",
 
-        email: registerStore.getErrors.email
-          ? registerStore.getErrors.email.join(", ")
-          : "",
-
-        password: registerStore.getErrors.password
-          ? registerStore.getErrors.password.join(", ")
+        password: loginStore.getErrors.password
+          ? loginStore.getErrors.password.join(", ")
           : "",
       };
     }
-  } else {
-    if (registerStore.getResponse?.data.is_verified) {
-      ls.set("__access-token", registerStore.getResponse?.data.access_token);
-      showSuccessToast(registerStore.getResponse?.message);
+  }else{
+    if(loginStore.getResponse?.data.is_verified){
+      ls.set("__access-token", loginStore.getResponse?.data.access_token);
+      showSuccessToast(loginStore.getResponse?.message);
       router.push("profile");
-    } else {
-      ls.set("__otp-token", registerStore.getResponse?.data.otp_token);
+    }else{
+      ls.set("__otp-token", loginStore.getResponse?.data.otp_token);
       router.push("two-step-verification");
     }
   }
   submitBtnloading.value = false;
 };
+
 </script>
 
 <style scoped></style>

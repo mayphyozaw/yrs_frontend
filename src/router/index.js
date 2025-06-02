@@ -40,6 +40,12 @@ const router = createRouter({
       meta: {showTabBar : false},
     },
     {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+      meta: {showTabBar : false},
+    },
+    {
       path: '/two-step-verification',
       name: 'two-step-verification',
       component: () => import('../views/TwoStepVerificationView.vue'),
