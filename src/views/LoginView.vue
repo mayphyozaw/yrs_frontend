@@ -103,6 +103,7 @@ const onSubmit = async (values) => {
     }
   }else{
     if(loginStore.getResponse?.data.is_verified){
+
       ls.set("__access-token", loginStore.getResponse?.data.access_token);
       showSuccessToast(loginStore.getResponse?.message);
       router.push("profile");
