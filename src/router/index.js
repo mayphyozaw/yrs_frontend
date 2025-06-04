@@ -61,8 +61,8 @@ const router = createRouter({
     {
       path: '/change-password',
       name: 'change-password',
-      component: () => import('../views/ProfileView.vue'),
-      meta: {showTabBar : true, requiresAuth : true},
+      component: () => import('../views/ChangePasswordView.vue'),
+      meta: {showTabBar : false, requiresAuth : true},
     },
   ],
 });
@@ -74,6 +74,8 @@ router.beforeEach(async (to, from, next) => {
   
   generalStore.setIsAuthenticated(ls.get('__access-token') ? true : false);
   
+
+  //like the middleware
   if (to.meta.requiresAuth && !generalStore.getIsAuthenticated) {
     next({path:"/login"});
   }else{
