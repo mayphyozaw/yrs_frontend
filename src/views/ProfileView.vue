@@ -53,6 +53,7 @@
 
     <div class="p-3">
       <van-cell-group inset class="mb-3 mx-0">
+
         <van-cell is-link to="/change-password">
           <template #title>
             <div class="flex items-center">
@@ -60,8 +61,17 @@
                 <span >Change Password</span>
             </div>
           </template>
-
         </van-cell>
+
+        <van-cell is-link to="/wallet-transaction">
+          <template #title>
+            <div class="flex items-center">
+                <van-icon name="paid" class="text-lg mr-1"/>
+                <span >Wallet Transaction</span>
+            </div>
+          </template>
+        </van-cell>
+
       </van-cell-group>
 
       <div v-if="profile != null">
