@@ -36,9 +36,22 @@
           :error-text="errorMessage"
           @load="onLoad"
         >
-          <RouteItem v-if="storeName == 'routeStore'" :list="list" :query-parameters="props.queryParameters"/>
+          <RouteItem
+            v-if="storeName == 'routeStore'"
+            :list="list"
+            :query-parameters="props.queryParameters"
+          />
           <StationItem v-if="storeName == 'stationStore'" :list="list" />
-          <WalletTransactionItem v-if="storeName == 'walletTransactionStore'" :list="list" />
+          
+          <TopUpHistoryItem
+            v-if="storeName == 'topUpHistoryStore'"
+            :list="list"
+          />
+
+          <WalletTransactionItem
+            v-if="storeName == 'walletTransactionStore'"
+            :list="list"
+          />
         </van-list>
       </div>
     </van-pull-refresh>
@@ -50,11 +63,12 @@ import { ref } from "vue";
 import { usestoreHelper } from "@/helplers/useStoreHelper";
 import RouteItem from "./RouteItem.vue";
 import StationItem from "./StationItem.vue";
+import TopUpHistoryItem from "./TopUpHistoryItem.vue";
 import WalletTransactionItem from "./WalletTransactionItem.vue";
 
 const props = defineProps({
   storeName: { type: String, required: true },
-  queryParameters:{type: Object, required:true},
+  queryParameters: { type: Object, required: true },
 });
 
 const storeName = ref(props.storeName);

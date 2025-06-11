@@ -2,7 +2,7 @@ Using V3.js for Frontend
 
     Library => vant, pinia, axios;
 
-   whenevers api uses  => 1. state => to declare varible for using (response, error, errorMessage, errors)
+   whenever api uses  => 1. state => to declare varible for using (response, error, errorMessage, errors)
                           2. getters => to reuse the values from state, (getResponse, geterror, getErrorMessage, geterrors)
                           3. actions => include method which is used from Frontend, (async get()) 
 
