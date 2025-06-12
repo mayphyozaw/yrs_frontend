@@ -9,13 +9,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chenfengyuan/vue-qrcode": "^2.0.0",
     "axios": "^1.9.0",
     "pinia": "^3.0.1",
+    "qrcode": "^1.5.4",
     "secure-ls": "^2.0.0",
     "v-viewer": "^3.0.21",
     "vant": "^4.9.19",
     "viewerjs": "^1.11.7",
-    "vue": "^3.5.13",
+    "vue": "^3.5.16",
     "vue-router": "^4.5.0"
   },
   "devDependencies": {

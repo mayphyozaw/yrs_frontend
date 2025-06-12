@@ -38,6 +38,7 @@ import App from "./App.vue";
 import router from "./router";
 import SecureLS from "secure-ls";
 import VueViewer from 'v-viewer';
+import VueQrcode from '@chenfengyuan/vue-qrcode';
 
 window.ls = new SecureLS({
   encodingType: import.meta.env.VITE_LS_ENCODING_TYPE,
@@ -76,8 +77,12 @@ app.use(NumberKeyboard);
 app.use(Divider);
 app.use(Tag);
 app.use(VueViewer);
-
-
 app.use(router);
+
+
+app.component(VueQrcode.name, VueQrcode);
+
+
+
 
 app.mount("#app");

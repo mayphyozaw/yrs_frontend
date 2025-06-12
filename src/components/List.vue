@@ -43,7 +43,12 @@
           />
           <StationItem v-if="storeName == 'stationStore'" :list="list" />
           
-          <TopUpHistoryItem
+          <TicketItem
+            v-if="storeName == 'ticketStore'"
+            :list="list"
+          />
+
+        <TopUpHistoryItem
             v-if="storeName == 'topUpHistoryStore'"
             :list="list"
           />
@@ -65,6 +70,7 @@ import RouteItem from "./RouteItem.vue";
 import StationItem from "./StationItem.vue";
 import TopUpHistoryItem from "./TopUpHistoryItem.vue";
 import WalletTransactionItem from "./WalletTransactionItem.vue";
+import TicketItem from "./TicketItem.vue";
 
 const props = defineProps({
   storeName: { type: String, required: true },

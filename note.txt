@@ -34,3 +34,6 @@ export default axiosInstance => When we write the import => import axiosInstance
 in which  "axiosInstance" the name which can be changed as you like in import so, the name is not fixed.
 
 export { name }; => when you do not want to change the name , you can onlu use this name.
+
+
+

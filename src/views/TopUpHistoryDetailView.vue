@@ -20,7 +20,8 @@
         <img
           :src="topUpHistoryDetail.image"
           alt=""
-          class="w-20 h-20 p-1 bg-gray-100 rounded-lg mx-auto mb-3" v-viewer
+          class="w-20 h-20 p-1 bg-gray-100 rounded-lg mx-auto mb-3"
+          v-viewer
         />
 
         <div class="text-center">
@@ -41,7 +42,6 @@
             :value="topUpHistoryDetail.trx_id"
           ></van-cell>
 
-          
           <van-cell
             title="Amount"
             :value="topUpHistoryDetail.amount"
@@ -106,8 +106,7 @@ const onClickLeft = () => history.back();
 
 const fetchTopUpHistoryDetail = async () => {
   await topUpHistoryDetailStore.get(route.params.trx_id);
-  topUpHistoryDetail.value =
-    topUpHistoryDetailStore.getResponse?.data;
+  topUpHistoryDetail.value = topUpHistoryDetailStore.getResponse?.data;
   errorMessage.value = topUpHistoryDetailStore.getErrorMessage;
   refreshing.value = false;
 };
