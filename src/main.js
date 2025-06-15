@@ -32,6 +32,7 @@ import {
   NumberKeyboard,
   Divider,
   Tag,
+  Uploader,
 } from "vant";
 
 import App from "./App.vue";
@@ -77,6 +78,8 @@ app.use(NumberKeyboard);
 app.use(Divider);
 app.use(Tag);
 app.use(VueViewer);
+app.use(Uploader);
+
 app.use(router);
 
 

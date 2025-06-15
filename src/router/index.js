@@ -90,6 +90,12 @@ const router = createRouter({
       meta: {showTabBar : false, requiresAuth : true},
     },
     {
+      path: '/top-up',
+      name: 'top-up',
+      component: () => import('../views/TopUpView.vue'),
+      meta: {showTabBar : false, requiresAuth : true},
+    },
+    {
       path: '/top-up-history',
       name: 'top-up-history',
       component: () => import('../views/TopUpHistoryView.vue'),
