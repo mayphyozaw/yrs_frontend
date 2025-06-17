@@ -33,6 +33,8 @@ import {
   Divider,
   Tag,
   Uploader,
+  RadioGroup, 
+  Radio,
 } from "vant";
 
 import App from "./App.vue";
@@ -79,6 +81,8 @@ app.use(Divider);
 app.use(Tag);
 app.use(VueViewer);
 app.use(Uploader);
+app.use(RadioGroup);
+app.use(Radio);
 
 app.use(router);
 

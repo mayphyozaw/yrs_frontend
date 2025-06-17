@@ -114,13 +114,14 @@ import { useMarkerStore } from "@/stores/markerStore"
 const router = useRouter();
 const stationStore = useStationStore();
 const markerStore = useMarkerStore();
+
 const stations = ref([]);
-
-const markers = ref([]);
-
 const page = ref(1);
 const last_page = ref(null);
 const finished = ref(false);
+
+const markers = ref([]);
+
 
 const originStationSlug = ref(null);
 const originStationTitle = ref("");
@@ -187,21 +188,10 @@ const originFieldClick = () => {
   fetchStation();
 };
 
-const destinationFieldClick = () => {
-  showDestinationPicker.value = true;
-  fetchStation();
-};
-
 const originPickerConfirm = ({ selectedOptions }) => {
   originStationSlug.value = selectedOptions[0]?.slug;
   originStationTitle.value = selectedOptions[0]?.title;
   showOriginPicker.value = false;
-};
-
-const destinationPickerConfirm = ({ selectedOptions }) => {
-  destinationStationSlug.value = selectedOptions[0]?.slug;
-  destinationStationTitle.value = selectedOptions[0]?.title;
-  showDestinationPicker.value = false;
 };
 
 const originPickerChange = ({ selectedOptions }) => {
@@ -210,6 +200,17 @@ const originPickerChange = ({ selectedOptions }) => {
   ) {
     fetchStation();
   }
+};
+
+const destinationFieldClick = () => {
+  showDestinationPicker.value = true;
+  fetchStation();
+};
+
+const destinationPickerConfirm = ({ selectedOptions }) => {
+  destinationStationSlug.value = selectedOptions[0]?.slug;
+  destinationStationTitle.value = selectedOptions[0]?.title;
+  showDestinationPicker.value = false;
 };
 
 const destinationPickerChange = ({ selectedOptions }) => {

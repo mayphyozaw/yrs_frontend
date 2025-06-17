@@ -65,6 +65,12 @@ const router = createRouter({
       meta: {showTabBar : false, requiresAuth : true},
     },
     {
+      path: '/buy-ticket',
+      name: 'buy-ticket',
+      component: () => import('../views/BuyTicketView.vue'),
+      meta: {showTabBar : false, requiresAuth : true},
+    },
+    {
       path: '/ticket',
       name: 'ticket',
       component: () => import('../views/TicketView.vue'),

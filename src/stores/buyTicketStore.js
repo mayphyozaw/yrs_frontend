@@ -2,7 +2,7 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import axiosInstance from "@/axiosInstance";
 
-export const useTopUpStore = defineStore("topUpStore", {
+export const useBuyTicketStore = defineStore("buyTicketStore", {
   state: () => ({
     response: null,
     error: null,
@@ -16,25 +16,18 @@ export const useTopUpStore = defineStore("topUpStore", {
     getErrors: (state) => state.errors,
   },
   actions: {
-    async store(amount, description, image) {
+    async store(type, origin_station_slug, destination_station_slug) {
       try {
-        let formData = new FormData();
-        formData.append("amount", amount);
-        formData.append("description", description);
-
-        if (image.length > 0) {
-          formData.append("image", image[0].file);
-        }
-
+        
         let response = await axiosInstance.post(
-          `user-portal/top-up`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+          `user-portal/buy-ticket`,{
+            type: type,
+            origin_station_slug: origin_station_slug,
+            destination_station_slug: destination_station_slug,
+          });
+          
+          
+        
         this.response = response.data ?? null;
 
         this.error = null;
